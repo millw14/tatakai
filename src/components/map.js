@@ -77,19 +77,60 @@ function createMarker(event, isLive = false) {
     return marker;
 }
 
-function createArc(event) {
+function createArc(event, animated = false) {
     if (!event.from || !event.to) return null;
 
     const color = COLORS[event.type]?.fill || '#9ca3b4';
     const curvePoints = getCurvePoints(event.from, event.to);
+    const group = L.layerGroup();
 
-    return L.polyline(curvePoints, {
+    // Faint trajectory line
+    const trail = L.polyline(curvePoints, {
         color,
         weight: 1,
-        opacity: 0.25,
-        dashArray: '4 3',
+        opacity: 0.15,
+        dashArray: '2 4',
         className: `arc-${event.type}`,
     });
+    group.addLayer(trail);
+
+    if (animated && curvePoints.length > 2) {
+        // Animated missile head moving along the arc
+        const head = L.circleMarker(curvePoints[0], {
+            radius: 3,
+            fillColor: color,
+            fillOpacity: 1,
+            color: '#fff',
+            weight: 1,
+            className: 'missile-head',
+        });
+        group.addLayer(head);
+
+        let idx = 0;
+        const step = () => {
+            idx++;
+            if (idx >= curvePoints.length) {
+                group.removeLayer(head);
+                return;
+            }
+            head.setLatLng(curvePoints[idx]);
+
+            // Draw solid trail behind the missile as it moves
+            if (idx > 1) {
+                const segment = L.polyline(
+                    [curvePoints[idx - 1], curvePoints[idx]],
+                    { color, weight: 2, opacity: 0.6 }
+                );
+                group.addLayer(segment);
+                setTimeout(() => { try { group.removeLayer(segment); } catch (_) {} }, 2000);
+            }
+        };
+
+        const interval = setInterval(step, 60);
+        setTimeout(() => clearInterval(interval), curvePoints.length * 60 + 100);
+    }
+
+    return group;
 }
 
 function filterEvents(filter) {
@@ -113,7 +154,7 @@ function filterEvents(filter) {
         if (marker) markersLayer.addLayer(marker);
 
         if (arcCount < maxArcs && (event.type === 'launch' || event.type === 'impact')) {
-            const arc = createArc(event);
+            const arc = createArc(event, false);
             if (arc) {
                 arcsLayer.addLayer(arc);
                 arcCount++;
@@ -201,6 +242,10 @@ function addPulseAnimation() {
       animation: livePulse 1.5s ease-in-out infinite !important;
       filter: drop-shadow(0 0 6px currentColor);
     }
+    .missile-head {
+      filter: drop-shadow(0 0 4px #ff6b35) drop-shadow(0 0 8px #ff6b35);
+      transition: none !important;
+    }
     @keyframes markerPulse {
       0%, 100% { opacity: 0.7; }
       50% { opacity: 0.4; }
@@ -224,7 +269,7 @@ export function addEventToMap(event) {
         liveMarkersLayer.addLayer(marker);
     }
 
-    const arc = createArc(event);
+    const arc = createArc(event, true);
     if (arc && (currentFilter === 'all' ||
         (currentFilter === 'today' && event.day === 5) ||
         (currentFilter === 'civilian' && (event.type === 'impact' || event.type === 'info')))) {

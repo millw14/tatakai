@@ -23,6 +23,7 @@ import { initAudioPlayer } from './components/audioPlayer.js';
 import { initCrtEffect } from './components/crtEffect.js';
 import { initMapParticles, spawnMissileTrail, spawnExplosion } from './components/mapParticles.js';
 import { initLiveClock } from './components/liveClock.js';
+import { startSimulation } from './data/simulation.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Remove no-transition class after first paint
@@ -95,6 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(() => {
     checkLiveEvents(onLiveEventReceived);
   }, 90000);
+
+  // Simulation engine — keeps the dashboard alive with synthetic events
+  startSimulation(onLiveEventReceived);
 });
 
 // Handle real-time parsed events

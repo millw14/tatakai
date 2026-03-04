@@ -15,6 +15,8 @@ import { initCommandPalette } from './components/commandPalette.js';
 import { initAudioPlayer } from './components/audioPlayer.js';
 import { initCrtEffect } from './components/crtEffect.js';
 import { initLiveClock } from './components/liveClock.js';
+import { startSimulation } from './data/simulation.js';
+import { classifyByKeyword, THREAT_COLORS } from './data/threatClassifier.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(() => {
@@ -68,8 +70,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Start RSS feed
-    checkLiveEvents(() => { }); // events go to the feed panel
+    checkLiveEvents(() => { });
     setInterval(() => {
         checkLiveEvents(() => { });
     }, 90000);
+
+    // Simulation also feeds into the intelligence panel as live intel items
+    startSimulation((event) => {
+        const panel = document.getElementById('live-news-feed');
+        if (!panel) return;
+
+        // Remove placeholder if present
+        const hint = panel.querySelector('.cmd-hint');
+        if (hint) hint.remove();
+
+        const threat = event.threat || classifyByKeyword(event.text);
+        const el = document.createElement('div');
+        el.className = 'news-item';
+        el.dataset.severity = threat.level;
+        el.innerHTML = `
+            <div class="news-item-header">
+                <span class="severity-badge ${threat.level}">${threat.level.toUpperCase()}</span>
+                <span class="news-source">${event.sources?.[0] || 'OSINT'}</span>
+                <span class="news-time">JUST NOW</span>
+            </div>
+            <span class="news-title">${escapeHtml(event.text)}</span>
+        `;
+        panel.insertBefore(el, panel.firstChild);
+
+        while (panel.children.length > 40) {
+            panel.removeChild(panel.lastChild);
+        }
+    });
 });
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
