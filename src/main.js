@@ -21,7 +21,7 @@ import { initRiskGauge } from './components/riskGauge.js';
 import { initCommandPalette } from './components/commandPalette.js';
 import { initAudioPlayer } from './components/audioPlayer.js';
 import { initCrtEffect } from './components/crtEffect.js';
-import { initMapParticles, spawnMissileTrail, spawnExplosion } from './components/mapParticles.js';
+
 import { initLiveClock } from './components/liveClock.js';
 import { startSimulation } from './data/simulation.js';
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize new live features
   initAudioPlayer();
   initCrtEffect();
-  initMapParticles(mapInstance);
+
   initLiveClock();
 
   // Wire real RSS breaking news alerts → banner (from WM pipeline)
@@ -108,10 +108,6 @@ function onLiveEventReceived(event) {
   addEventToMap(event);
   addTimelineEvent(event);
   addLiveEventToHistory(event);
-
-  // Particle effects for map
-  if (event.type === 'launch') spawnMissileTrail(event);
-  if (event.type === 'impact') spawnExplosion(event);
 
   // Add to Live Alerts Ticker
   addToAlertsTicker(event);
