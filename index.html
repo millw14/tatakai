@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TATAKAI — Real-Time Middle East Conflict Intelligence</title>
+  <meta name="description"
+    content="AI-powered real-time conflict intelligence dashboard. Verified launches, intercepts, impacts, and strategic analysis." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Prevent FOUC -->
+  <script>(function () { var t = localStorage.getItem('tatakai-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; document.documentElement.classList.add('no-transition'); })();</script>
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+  <!-- Breaking News Banner -->
+  <div id="breaking-banner"></div>
+
+  <!-- Header — Compact WM-style -->
+  <header id="app-header">
+    <div class="header-left">
+      <div class="logo" id="logo">
+        <span class="logo-text">TATAKAI</span>
+        <span class="logo-badge">LIVE</span>
+      </div>
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span id="update-time">OPERATIONAL</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="/intelligence.html" class="nav-link">INTELLIGENCE</a>
+      <a href="/timeline.html" class="nav-link">TIMELINE</a>
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
+        <i data-lucide="moon" id="theme-icon" style="width: 14px; height: 14px;"></i>
+      </button>
+      <button id="share-btn" class="icon-btn" aria-label="Share">
+        <i data-lucide="share" style="width: 14px; height: 14px;"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats Bar — Compact row -->
+  <section id="stats-bar">
+    <div class="stat-card" id="stat-launches">
+      <div class="stat-icon"><i data-lucide="rocket" style="width:16px;height:16px;"></i></div>
+      <div class="stat-content">
+        <div class="stat-value" data-target="1247">0</div>
+        <div class="stat-label">LAUNCHES</div>
+      </div>
+      <div class="stat-badge threat-high">VERIFIED</div>
+    </div>
+    <div class="stat-card" id="stat-intercepted">
+      <div class="stat-icon"><i data-lucide="shield" style="width:16px;height:16px;"></i></div>
+      <div class="stat-content">
+        <div class="stat-value" data-target="82" data-suffix="%">0%</div>
+        <div class="stat-label">INTERCEPTED</div>
+      </div>
+      <div class="stat-badge threat-low">ESTIMATED</div>
+    </div>
+    <div class="stat-card" id="stat-impacts">
+      <div class="stat-icon"><i data-lucide="map-pin" style="width:16px;height:16px;"></i></div>
+      <div class="stat-content">
+        <div class="stat-value" data-target="47">0</div>
+        <div class="stat-label">IMPACTS</div>
+      </div>
+      <div class="stat-badge threat-critical">VERIFIED</div>
+    </div>
+    <div class="stat-card" id="stat-airports">
+      <div class="stat-icon"><i data-lucide="plane" style="width:16px;height:16px;"></i></div>
+      <div class="stat-content">
+        <div class="stat-value" data-target="12">0</div>
+        <div class="stat-label">AIRPORTS CLOSED</div>
+      </div>
+      <div class="stat-badge threat-medium">CONFIRMED</div>
+    </div>
+  </section>
+
+  <!-- Main Dashboard -->
+  <main id="dashboard">
+    <!-- Map Section — Full Width, 50vh -->
+    <section id="map-section">
+      <div id="map-container">
+        <div id="map"></div>
+        <div id="map-controls">
+          <button class="map-filter active" data-filter="all">All Events</button>
+          <button class="map-filter" data-filter="today">Today Only</button>
+          <button class="map-filter" data-filter="civilian">Civilian Areas</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel Grid — Below the map -->
+    <div class="panel-grid">
+
+      <!-- Panel: Live Timeline -->
+      <div class="panel" id="timeline-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="activity" class="panel-icon"></i>
+            LIVE TIMELINE
+          </div>
+          <div class="panel-status">
+            <span class="panel-status-dot"></span>
+            <span class="auto-scroll-badge" id="auto-scroll-toggle">AUTO</span>
+          </div>
+        </div>
+        <div class="panel-body" id="timeline-feed"></div>
+      </div>
+
+      <!-- Panel: Strategic Risk -->
+      <div class="panel" id="risk-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="alert-triangle" class="panel-icon"></i>
+            STRATEGIC RISK
+          </div>
+          <div class="panel-status">
+            <span class="panel-status-dot" style="background:var(--threat-high);"></span>
+            ELEVATED
+          </div>
+        </div>
+        <div class="panel-body" id="risk-panel-body">
+          <div id="risk-gauge-container"></div>
+          <div class="risk-level-display">
+            <div class="risk-defcon">DEFCON 2</div>
+            <div class="risk-label">CONFLICT STATUS: ACTIVE — DAY 5</div>
+          </div>
+          <div class="risk-items">
+            <div class="risk-item">
+              <span class="risk-dot" style="background:var(--threat-critical);"></span>
+              <span>Iranian Supreme Leader killed — Interim Council in control</span>
+            </div>
+            <div class="risk-item">
+              <span class="risk-dot" style="background:var(--threat-high);"></span>
+              <span>Strait of Hormuz shipping heavily disrupted</span>
+            </div>
+            <div class="risk-item">
+              <span class="risk-dot" style="background:var(--threat-high);"></span>
+              <span>Operation Epic Fury (U.S.) / Roaring Lion (Israel) active</span>
+            </div>
+            <div class="risk-item">
+              <span class="risk-dot" style="background:var(--threat-medium);"></span>
+              <span>UAE schools/universities moved online for 3 days</span>
+            </div>
+            <div class="risk-item">
+              <span class="risk-dot" style="background:var(--threat-medium);"></span>
+              <span>U.S. losses: 3 KIA, 5 seriously wounded</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Daily Summary -->
+      <div class="panel" id="summary-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="file-text" class="panel-icon"></i>
+            DAILY SUMMARY
+          </div>
+          <div class="panel-status">
+            <span>60-SEC READ</span>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="summary-body-compact">
+            <p><strong>Day 5 (Mar 4):</strong> Intensity declining. Iran signals ceasefire willingness via Swiss
+              intermediary. 1,200+ missiles/drones launched over 5 days — largest missile exchange in modern warfare
+              history.</p>
+            <p><strong>Impacts:</strong> Jebel Ali Port, Burj Al Arab area, Beit Shemesh (9 killed), Erbil airport (4
+              killed), Haifa industrial zone. U.S. losses: 3 KIA at Camp Arifjan.</p>
+            <p><strong>Defenses:</strong> 82% overall interception rate. Arrow-3, THAAD, Iron Dome, David's Sling, Aegis
+              all engaged. Iran estimated at 60-70% stockpile depletion.</p>
+            <p><strong>Bottom line:</strong> Ceasefire talks underway. Turkey mediating. Houthis continue independently.
+              Oil at $165/barrel. 12 airports closed.</p>
+            <div class="summary-sources">
+              <span class="source-tag">Reuters</span>
+              <span class="source-tag">AP</span>
+              <span class="source-tag">CENTCOM</span>
+              <span class="source-tag">BBC</span>
+              <span class="source-tag">Al Jazeera</span>
+              <span class="source-tag">Pentagon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Conflict Meta -->
+      <div class="panel" id="meta-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="info" class="panel-icon"></i>
+            CONFLICT INFO
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="meta-grid">
+            <div class="meta-row">
+              <span class="meta-key">STATUS</span>
+              <span class="meta-val" style="color:var(--threat-high);font-weight:700;">Active — Day 5 · Ceasefire
+                Talks</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">STARTED</span>
+              <span class="meta-val">February 28, 2026</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">OPERATIONS</span>
+              <span class="meta-val">Epic Fury (U.S.) · Roaring Lion (Israel)</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">PROJECTILES</span>
+              <span class="meta-val">1,247+ launches · 82% intercepted · 47+ impacts</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">KEY EVENTS</span>
+              <span class="meta-val">Khamenei killed · Natanz struck · Hormuz blocked · Oil $165</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Casualty & Damage Tracker -->
+      <div class="panel" id="casualty-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="heart-pulse" class="panel-icon"></i>
+            CASUALTY TRACKER
+          </div>
+          <div class="panel-status">
+            <span class="panel-status-dot" style="background:var(--threat-critical);"></span>
+            LIVE
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="casualty-grid">
+            <div class="casualty-side">
+              <div class="casualty-flag">🇮🇱 ISRAEL</div>
+              <div class="casualty-row"><span class="casualty-label">Civilian KIA</span><span
+                  class="casualty-value threat-critical">14</span></div>
+              <div class="casualty-row"><span class="casualty-label">Civilian WIA</span><span
+                  class="casualty-value threat-high">127</span></div>
+              <div class="casualty-row"><span class="casualty-label">Military KIA</span><span
+                  class="casualty-value threat-high">3</span></div>
+              <div class="casualty-row"><span class="casualty-label">Infrastructure</span><span
+                  class="casualty-value threat-medium">12 sites</span></div>
+            </div>
+            <div class="casualty-side">
+              <div class="casualty-flag">🇮🇷 IRAN</div>
+              <div class="casualty-row"><span class="casualty-label">Military KIA</span><span
+                  class="casualty-value threat-critical">200+</span></div>
+              <div class="casualty-row"><span class="casualty-label">Civilian KIA</span><span
+                  class="casualty-value threat-high">45</span></div>
+              <div class="casualty-row"><span class="casualty-label">Nuclear Sites</span><span
+                  class="casualty-value threat-critical">3 destroyed</span></div>
+              <div class="casualty-row"><span class="casualty-label">Missile Stock</span><span
+                  class="casualty-value threat-high">60-70% depleted</span></div>
+            </div>
+            <div class="casualty-side">
+              <div class="casualty-flag">🇺🇸 COALITION</div>
+              <div class="casualty-row"><span class="casualty-label">U.S. KIA</span><span
+                  class="casualty-value threat-critical">3</span></div>
+              <div class="casualty-row"><span class="casualty-label">U.S. WIA</span><span
+                  class="casualty-value threat-high">5</span></div>
+              <div class="casualty-row"><span class="casualty-label">UAE Civilian</span><span
+                  class="casualty-value threat-medium">3 injured</span></div>
+              <div class="casualty-row"><span class="casualty-label">Iraq KIA</span><span
+                  class="casualty-value threat-high">4 (Erbil)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Strait of Hormuz Status -->
+      <div class="panel" id="hormuz-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="ship" class="panel-icon"></i>
+            STRAIT OF HORMUZ
+          </div>
+          <div class="panel-status">
+            <span class="panel-status-dot" style="background:var(--threat-critical);"></span>
+            BLOCKED
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="hormuz-status">
+            <div class="hormuz-indicator critical">
+              <span class="hormuz-icon">⚠️</span>
+              <span>SHIPPING SUSPENDED</span>
+            </div>
+            <div class="hormuz-stats">
+              <div class="hormuz-row"><span>Daily oil flow</span><span class="threat-critical">HALTED</span></div>
+              <div class="hormuz-row"><span>Normal: 21M bbl/day</span><span class="threat-medium">~30% global</span>
+              </div>
+              <div class="hormuz-row"><span>Vessels waiting</span><span>47 tankers</span></div>
+              <div class="hormuz-row"><span>Insurance premiums</span><span class="threat-high">+400%</span></div>
+              <div class="hormuz-row"><span>IRGCN fast boats</span><span class="threat-low">30+ destroyed</span></div>
+              <div class="hormuz-row"><span>Mine threat</span><span class="threat-high">ASSESSED HIGH</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Force Deployment Tracker -->
+      <div class="panel" id="forces-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="swords" class="panel-icon"></i>
+            FORCE DEPLOYMENT
+          </div>
+          <div class="panel-status">
+            <span class="panel-status-dot"></span>
+            ACTIVE
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="force-grid">
+            <div class="force-item">
+              <div class="force-flag">🇺🇸</div>
+              <div class="force-name">USS Bataan ARG</div>
+              <div class="force-loc">Persian Gulf</div>
+            </div>
+            <div class="force-item">
+              <div class="force-flag">🇺🇸</div>
+              <div class="force-name">USS Eisenhower CSG</div>
+              <div class="force-loc">Arabian Sea</div>
+            </div>
+            <div class="force-item">
+              <div class="force-flag">🇺🇸</div>
+              <div class="force-name">B-2 Spirit (509th BW)</div>
+              <div class="force-loc">Diego Garcia</div>
+            </div>
+            <div class="force-item">
+              <div class="force-flag">🇬🇧</div>
+              <div class="force-name">HMS Diamond (D34)</div>
+              <div class="force-loc">Gulf of Oman</div>
+            </div>
+            <div class="force-item">
+              <div class="force-flag">🇮🇱</div>
+              <div class="force-name">IDF Northern Command</div>
+              <div class="force-loc">Lebanon Border</div>
+            </div>
+            <div class="force-item">
+              <div class="force-flag">🇺🇸</div>
+              <div class="force-name">THAAD Battery</div>
+              <div class="force-loc">Al Dhafra, UAE</div>
+            </div>
+            <div class="force-item">
+              <div class="force-flag">🇺🇸</div>
+              <div class="force-name">Patriot PAC-3</div>
+              <div class="force-loc">Al Udeid, Qatar</div>
+            </div>
+            <div class="force-item">
+              <div class="force-flag">🇫🇷</div>
+              <div class="force-name">Charles de Gaulle CSG</div>
+              <div class="force-loc">Eastern Med</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Oil & Markets Impact -->
+      <div class="panel" id="markets-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="trending-up" class="panel-icon"></i>
+            OIL & MARKETS
+          </div>
+          <div class="panel-status">
+            <span class="panel-status-dot" style="background:var(--threat-high);"></span>
+            VOLATILE
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="market-grid">
+            <div class="market-item">
+              <span class="market-label">Brent Crude</span>
+              <span class="market-value market-up">$165.40</span>
+              <span class="market-change market-up">▲ +87%</span>
+            </div>
+            <div class="market-item">
+              <span class="market-label">WTI Crude</span>
+              <span class="market-value market-up">$158.20</span>
+              <span class="market-change market-up">▲ +82%</span>
+            </div>
+            <div class="market-item">
+              <span class="market-label">Gold</span>
+              <span class="market-value market-up">$2,890</span>
+              <span class="market-change market-up">▲ +12%</span>
+            </div>
+            <div class="market-item">
+              <span class="market-label">S&P 500</span>
+              <span class="market-value market-down">4,120</span>
+              <span class="market-change market-down">▼ -8.3%</span>
+            </div>
+            <div class="market-item">
+              <span class="market-label">USD/EUR</span>
+              <span class="market-value market-down">0.87</span>
+              <span class="market-change market-down">▼ -3.1%</span>
+            </div>
+            <div class="market-item">
+              <span class="market-label">VIX (Fear)</span>
+              <span class="market-value market-up">48.7</span>
+              <span class="market-change market-up">▲ +180%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Live Alerts Ticker -->
+      <div class="panel panel-span-full" id="alerts-ticker-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="bell-ring" class="panel-icon"></i>
+            LIVE ALERTS FEED
+          </div>
+          <div class="panel-status">
+            <span class="panel-status-dot"></span>
+            <span id="alerts-count">0</span> ALERTS
+          </div>
+        </div>
+        <div class="panel-body" id="alerts-ticker-body" style="max-height:200px;overflow-y:auto;">
+          <div class="alerts-placeholder">Monitoring 18 RSS feeds for breaking developments...</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer Navigation -->
+  <footer class="site-footer">
+    <nav class="footer-nav">
+      <a href="/" class="footer-nav-link active">
+        <i data-lucide="map" style="width:14px;height:14px;"></i>
+        DASHBOARD
+      </a>
+      <a href="/intelligence.html" class="footer-nav-link">
+        <i data-lucide="radio" style="width:14px;height:14px;"></i>
+        INTELLIGENCE
+      </a>
+      <a href="/timeline.html" class="footer-nav-link">
+        <i data-lucide="scroll-text" style="width:14px;height:14px;"></i>
+        TIMELINE
+      </a>
+    </nav>
+    <div class="footer-meta">
+      <span>TATAKAI v1.0</span>
+      <span class="footer-dot"></span>
+      <span>REAL-TIME CONFLICT INTELLIGENCE</span>
+      <span class="footer-dot"></span>
+      <span>DATA: REUTERS · AP · BBC · CENTCOM · IDF</span>
+    </div>
+  </footer>
+
+  <!-- Share Modal -->
+  <div id="share-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Share This Update</h3>
+        <button id="modal-close" class="icon-btn"><i data-lucide="x" style="width: 14px; height: 14px;"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="share-preview">TATAKAI — Day 3: 347 launches, 78% intercepted, 12 civilian impacts. Live conflict
+          tracker.</p>
+        <div class="share-buttons">
+          <a href="#" id="share-whatsapp" class="share-link whatsapp" target="_blank"
+            rel="noopener"><span>WhatsApp</span></a>
+          <a href="#" id="share-telegram" class="share-link telegram" target="_blank"
+            rel="noopener"><span>Telegram</span></a>
+          <a href="#" id="share-x" class="share-link x-twitter" target="_blank" rel="noopener"><span>X /
+              Twitter</span></a>
+          <button id="share-copy" class="share-link copy"><span>Copy Link</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event List / Details Modal -->
+  <div id="events-modal" class="modal-overlay hidden">
+    <div class="modal-content large-modal">
+      <div class="modal-header">
+        <h3 id="events-modal-title">Event List</h3>
+        <button id="events-modal-close" class="icon-btn"><i data-lucide="x"
+            style="width: 14px; height: 14px;"></i></button>
+      </div>
+      <div class="modal-body">
+        <div id="events-modal-list" class="events-list"></div>
+        <div id="event-detail-view" class="event-detail-view hidden">
+          <button id="back-to-list" class="back-btn"><i data-lucide="arrow-left" style="width: 12px; height: 12px;"></i>
+            Back</button>
+          <div id="event-detail-content"></div>
+          <div class="ai-explanation-box">
+            <div class="ai-box-header">
+              <i data-lucide="sparkles" style="width: 12px; height: 12px; color: var(--green);"></i>
+              <span>AI ANALYSIS (GROQ)</span>
+            </div>
+            <div id="ai-explanation-content" class="ai-box-body">
+              <button id="generate-explanation-btn" class="generate-btn">Generate Analysis</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Analyzer (Groq Integration) -->
+  <button id="analyzer-toggle" aria-label="Ask AI Analyzer">
+    <i data-lucide="sparkles" style="width: 20px; height: 20px;"></i>
+  </button>
+  <div id="analyzer-panel">
+    <div class="analyzer-header">
+      <div class="analyzer-title">
+        <span>AI ANALYZER</span>
+        <span class="groq-badge">GROQ</span>
+      </div>
+      <button id="analyzer-close" class="icon-btn" style="width:24px; height:24px;"><i data-lucide="x"
+          style="width: 12px; height: 12px;"></i></button>
+    </div>
+    <div id="analyzer-messages">
+      <div class="analyzer-msg ai">
+        <div class="msg-content">
+          TATAKAI AI Analyzer. Ask me to explain military terms, geopolitical context, or events on this dashboard.
+          Facts only.
+        </div>
+      </div>
+    </div>
+    <div class="analyzer-input-area">
+      <input type="text" id="analyzer-input" placeholder="e.g., What is THAAD?" autocomplete="off" />
+      <button id="analyzer-send" aria-label="Send"><i data-lucide="arrow-up"
+          style="width: 16px; height: 16px;"></i></button>
+    </div>
+  </div>
+
+  <!-- Command Palette Overlay -->
+  <div id="cmd-palette-overlay" class="cmd-palette-overlay hidden">
+    <div class="cmd-palette">
+      <div class="cmd-palette-header">
+        <i data-lucide="search" style="width:14px;height:14px;color:var(--text-muted);"></i>
+        <input type="text" id="cmd-palette-input" placeholder="Search events, actions, locations..." autocomplete="off"
+          spellcheck="false" />
+        <kbd class="cmd-kbd">ESC</kbd>
+      </div>
+      <div id="cmd-palette-results" class="cmd-palette-results"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

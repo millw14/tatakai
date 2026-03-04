@@ -1,0 +1,313 @@
+/* ========================================
+   TATAKAI — Timeline Page CSS
+   WorldMonitor-Inspired Dark Military Aesthetic
+   ======================================== */
+
+.timeline-page-wrapper {
+    min-height: calc(100vh - 40px);
+    background: var(--bg-primary);
+    padding: 40px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+/* Hero Section */
+.timeline-hero {
+    text-align: center;
+    margin-bottom: 60px;
+    max-width: 500px;
+    animation: fadeInDown 0.6s ease;
+}
+
+.timeline-hero h1 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.timeline-hero p {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+}
+
+/* Visualization Container */
+.timeline-visualization {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    padding: 40px 0;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* The Central Glowing Track (Vertical) */
+.timeline-track-glow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+            transparent 0%,
+            var(--green) 10%,
+            var(--green) 90%,
+            transparent 100%);
+    opacity: 0.4;
+    z-index: 0;
+}
+
+/* Individual Nodes */
+.timeline-node-item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+    padding: 16px 0;
+    opacity: 0;
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+/* Staggered animation via JS --i var */
+.timeline-node-item:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.timeline-node-item:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.timeline-node-item:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.timeline-node-item:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+.timeline-node-item:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.timeline-node-item:nth-child(6) {
+    animation-delay: 0.3s;
+}
+
+.timeline-node-item:nth-child(7) {
+    animation-delay: 0.35s;
+}
+
+.timeline-node-item:nth-child(8) {
+    animation-delay: 0.4s;
+}
+
+.timeline-node-item:nth-child(9) {
+    animation-delay: 0.45s;
+}
+
+.timeline-node-item:nth-child(10) {
+    animation-delay: 0.5s;
+}
+
+.timeline-node-item:nth-child(n+11) {
+    animation-delay: 0.55s;
+}
+
+/* Layout alternating logic */
+.timeline-node-item.left {
+    flex-direction: row-reverse;
+}
+
+.timeline-node-item.right {
+    flex-direction: row;
+}
+
+/* The Central Dot */
+.timeline-dot-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.timeline-dot:hover {
+    transform: scale(1.5);
+    border-color: currentColor;
+    background: currentColor;
+    box-shadow: 0 0 12px currentColor;
+}
+
+/* Coloring */
+.timeline-dot.type-launch {
+    border-color: var(--color-launch);
+    color: var(--color-launch);
+}
+
+.timeline-dot.type-intercept {
+    border-color: var(--color-intercept);
+    color: var(--color-intercept);
+}
+
+.timeline-dot.type-impact {
+    border-color: var(--color-impact);
+    color: var(--color-impact);
+}
+
+.timeline-dot.type-info {
+    border-color: var(--text-muted);
+    color: var(--text-muted);
+}
+
+/* Sizing */
+.timeline-dot.md {
+    width: 12px;
+    height: 12px;
+}
+
+.timeline-dot.lg {
+    width: 14px;
+    height: 14px;
+    border-width: 3px;
+}
+
+/* The Card Container */
+.timeline-card {
+    width: calc(50% - 40px);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.timeline-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--text-muted);
+}
+
+/* Dashed connector to the dot */
+.timeline-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 25px;
+    height: 1px;
+    background: var(--border-color);
+    opacity: 0.5;
+}
+
+.timeline-node-item.left .timeline-card::before {
+    right: -25px;
+}
+
+.timeline-node-item.right .timeline-card::before {
+    left: -25px;
+}
+
+/* Card Internals */
+.card-date {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.card-type {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+}
+
+.card-type.type-launch {
+    color: var(--color-launch);
+    background: color-mix(in srgb, var(--color-launch) 10%, transparent);
+}
+
+.card-type.type-intercept {
+    color: var(--color-intercept);
+    background: color-mix(in srgb, var(--color-intercept) 10%, transparent);
+}
+
+.card-type.type-impact {
+    color: var(--color-impact);
+    background: color-mix(in srgb, var(--color-impact) 10%, transparent);
+}
+
+.card-type.type-info {
+    color: var(--text-muted);
+    background: var(--overlay-subtle);
+}
+
+.timeline-card h3 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-right: 50px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .timeline-track-glow {
+        left: 20px;
+        transform: none;
+    }
+
+    .timeline-dot-wrapper {
+        left: 20px;
+        transform: translate(-50%, -50%);
+    }
+
+    .timeline-node-item,
+    .timeline-node-item.left,
+    .timeline-node-item.right {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .timeline-card {
+        width: calc(100% - 50px);
+    }
+
+    .timeline-card::before {
+        left: -20px !important;
+        right: auto !important;
+        width: 20px;
+    }
+}

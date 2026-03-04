@@ -1,0 +1,118 @@
+/* ========================================
+   TATAKAI — Modals & Overlay Components
+   WorldMonitor-Inspired
+   ======================================== */
+
+/* Clickable stat cards */
+.stat-card.clickable {
+    cursor: pointer;
+}
+
+.stat-card.clickable:hover {
+    border-color: var(--green);
+}
+
+/* Large / Full Modals */
+.large-modal {
+    max-width: 600px !important;
+    width: 95% !important;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.full-modal {
+    max-width: 900px !important;
+    width: 95% !important;
+    height: 90vh;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.large-modal .modal-body,
+.full-modal .modal-body {
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Event List View */
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.event-list-item {
+    padding: 8px 10px;
+    background: var(--overlay-subtle);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.event-list-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--green);
+}
+
+/* Event type border accents */
+.event-list-item[style*="info"] {
+    border-left: 3px solid var(--text-muted);
+}
+
+.event-list-item[style*="launch"] {
+    border-left: 3px solid var(--color-launch);
+}
+
+.event-list-item[style*="intercept"] {
+    border-left: 3px solid var(--color-intercept);
+}
+
+.event-list-item[style*="impact"] {
+    border-left: 3px solid var(--color-impact);
+}
+
+.event-list-time {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.event-list-text {
+    font-size: 11px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Event Detail View */
+#event-detail-content {
+    margin-bottom: 12px;
+}
+
+#event-detail-content h4 {
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+}
+
+#event-detail-content .detail-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+#event-detail-content p {
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}

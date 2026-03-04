@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TATAKAI — Intelligence Feed</title>
+    <meta name="description"
+        content="Real-time intelligence feeds from 14+ global news sources with AI-powered threat classification." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>(function () { var t = localStorage.getItem('tatakai-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; document.documentElement.classList.add('no-transition'); })();</script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <!-- Breaking News Banner -->
+    <div id="breaking-banner"></div>
+
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-left">
+            <a href="/" style="text-decoration:none;">
+                <div class="logo" id="logo">
+                    <span class="logo-text">TATAKAI</span>
+                    <span class="logo-badge">INTEL</span>
+                </div>
+            </a>
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="update-time">14 SOURCES ACTIVE</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="/" class="nav-link">DASHBOARD</a>
+            <a href="/timeline.html" class="nav-link">TIMELINE</a>
+            <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
+                <i data-lucide="moon" id="theme-icon" style="width: 14px; height: 14px;"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-container" style="padding: 4px;">
+        <div class="panel-grid">
+
+            <!-- Panel: Live Intelligence Feed -->
+            <div class="panel panel-span-2" id="news-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i data-lucide="radio" class="panel-icon"></i>
+                        LIVE INTELLIGENCE FEED
+                    </div>
+                    <div class="panel-status">
+                        <span class="panel-status-dot"></span>
+                        14 SOURCES
+                    </div>
+                </div>
+                <div class="panel-body" id="live-news-feed" style="max-height:600px;overflow-y:auto;">
+                    <div class="cmd-hint"><span>Fetching feeds from Reuters, AP, BBC, Al Jazeera, CNN, Sky
+                            News...</span></div>
+                </div>
+            </div>
+
+            <!-- Panel: Source Health -->
+            <div class="panel" id="freshness-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i data-lucide="database" class="panel-icon"></i>
+                        SOURCE HEALTH
+                    </div>
+                    <div class="panel-status">
+                        <span class="panel-status-dot"></span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="freshness-grid">
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">Reuters (Tier 1)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">AP News (Tier 1)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">BBC World (Tier 2)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">Al Jazeera (Tier 2)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">CNN World (Tier 2)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">Sky News (Tier 2)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">Times of Israel (Tier 2)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">Iran Intl (Tier 2)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">Defense One (Tier 3)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                        <div class="freshness-row">
+                            <span class="freshness-dot fresh"></span>
+                            <span class="freshness-name">The War Zone (Tier 3)</span>
+                            <span class="freshness-time">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Live Video Streams -->
+            <div class="panel panel-span-2" id="live-video-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i data-lucide="tv" class="panel-icon"></i>
+                        LIVE STREAMS
+                    </div>
+                    <div class="panel-status">
+                        <span class="panel-status-dot"></span>
+                        4 CHANNELS
+                    </div>
+                </div>
+                <div class="panel-body" id="live-video-body"></div>
+            </div>
+
+            <!-- Panel: Threat Classification Legend -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i data-lucide="shield-alert" class="panel-icon"></i>
+                        THREAT CLASSIFICATION
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="severity-badge critical">CRITICAL</span>
+                            <span style="font-size:11px;color:var(--text-muted);">Nuclear, invasion, mass casualty,
+                                declaration of war</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="severity-badge high">HIGH</span>
+                            <span style="font-size:11px;color:var(--text-muted);">Airstrikes, missile launches, bombing,
+                                terror attack</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="severity-badge medium">MEDIUM</span>
+                            <span style="font-size:11px;color:var(--text-muted);">Protests, military exercises,
+                                diplomatic crisis</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="severity-badge low">LOW</span>
+                            <span style="font-size:11px;color:var(--text-muted);">Elections, summits, treaties,
+                                negotiations</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Navigation -->
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="/" class="footer-nav-link">
+                <i data-lucide="map" style="width:14px;height:14px;"></i>
+                DASHBOARD
+            </a>
+            <a href="/intelligence.html" class="footer-nav-link active">
+                <i data-lucide="radio" style="width:14px;height:14px;"></i>
+                INTELLIGENCE
+            </a>
+            <a href="/timeline.html" class="footer-nav-link">
+                <i data-lucide="scroll-text" style="width:14px;height:14px;"></i>
+                TIMELINE
+            </a>
+        </nav>
+        <div class="footer-meta">
+            <span>TATAKAI v1.0</span>
+            <span class="footer-dot"></span>
+            <span>REAL-TIME CONFLICT INTELLIGENCE</span>
+            <span class="footer-dot"></span>
+            <span>DATA: REUTERS · AP · BBC · CENTCOM · IDF</span>
+        </div>
+    </footer>
+
+    <!-- Command Palette Overlay -->
+    <div id="cmd-palette-overlay" class="cmd-palette-overlay hidden">
+        <div class="cmd-palette">
+            <div class="cmd-palette-header">
+                <i data-lucide="search" style="width:14px;height:14px;color:var(--text-muted);"></i>
+                <input type="text" id="cmd-palette-input" placeholder="Search events, actions, locations..."
+                    autocomplete="off" spellcheck="false" />
+                <kbd class="cmd-kbd">ESC</kbd>
+            </div>
+            <div id="cmd-palette-results" class="cmd-palette-results"></div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/intelligence.js"></script>
+</body>
+
+</html>

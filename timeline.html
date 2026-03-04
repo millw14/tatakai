@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TATAKAI — War Timeline</title>
+    <meta name="description" content="Visual chronological timeline of the ongoing Middle East conflict." />
+
+    <!-- Prevent FOUC -->
+    <script>(function () { var t = localStorage.getItem('tatakai-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; document.documentElement.classList.add('no-transition'); })();</script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/src/styles/variables.css" />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/components.css" />
+    <link rel="stylesheet" href="/src/styles/layout.css" />
+    <link rel="stylesheet" href="/src/styles/features.css" />
+    <link rel="stylesheet" href="/src/styles/timeline-page.css" />
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-left">
+            <a href="/" style="text-decoration:none;">
+                <div class="logo">
+                    <span class="logo-text">TATAKAI</span>
+                    <span class="logo-badge">TIMELINE</span>
+                </div>
+            </a>
+        </div>
+        <div class="header-right">
+            <a href="/" class="nav-link">DASHBOARD</a>
+            <a href="/intelligence.html" class="nav-link">INTELLIGENCE</a>
+            <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
+                <i data-lucide="moon" style="width:14px;height:14px;"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Timeline Page -->
+    <main class="timeline-page-wrapper">
+        <div class="timeline-hero">
+            <h1>CONFLICT HISTORY</h1>
+            <p>Chronological intelligence view — inception to present. 1,200+ projectiles tracked across 5 days.</p>
+        </div>
+
+        <div class="timeline-visualization" id="timeline-viz">
+            <div class="timeline-track-glow"></div>
+            <!-- Nodes injected by JS -->
+        </div>
+    </main>
+
+    <!-- Footer Navigation -->
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="/" class="footer-nav-link">
+                <i data-lucide="map" style="width:14px;height:14px;"></i>
+                DASHBOARD
+            </a>
+            <a href="/intelligence.html" class="footer-nav-link">
+                <i data-lucide="radio" style="width:14px;height:14px;"></i>
+                INTELLIGENCE
+            </a>
+            <a href="/timeline.html" class="footer-nav-link active">
+                <i data-lucide="scroll-text" style="width:14px;height:14px;"></i>
+                TIMELINE
+            </a>
+        </nav>
+        <div class="footer-meta">
+            <span>TATAKAI v1.0</span>
+            <span class="footer-dot"></span>
+            <span>REAL-TIME CONFLICT INTELLIGENCE</span>
+            <span class="footer-dot"></span>
+            <span>DATA: REUTERS · AP · BBC · CENTCOM · IDF</span>
+        </div>
+    </footer>
+
+    <!-- Event Detail Modal -->
+    <div id="timeline-event-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="timeline-modal-title">EVENT DETAIL</h3>
+                <button class="icon-btn" id="timeline-modal-close" aria-label="Close">
+                    <i data-lucide="x" style="width:12px;height:12px;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="timeline-detail-content"></div>
+                <div id="ai-explanation-content" class="ai-explanation-box" style="margin-top:12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/timeline.js"></script>
+</body>
+
+</html>
