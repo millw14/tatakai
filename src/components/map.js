@@ -193,24 +193,7 @@ export function updateMapTheme(isDark) {
 }
 
 function addPulseAnimation() {
-    const style = document.createElement('style');
-    style.textContent = `
-    .marker-launch { animation: markerPulse 3s ease-in-out infinite; }
-    .marker-impact { animation: markerPulse 4s ease-in-out infinite; animation-delay: 1s; }
-    .marker-live {
-      animation: livePulse 1.5s ease-in-out infinite !important;
-      filter: drop-shadow(0 0 6px currentColor);
-    }
-    @keyframes markerPulse {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 0.4; }
-    }
-    @keyframes livePulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.3); }
-    }
-  `;
-    document.head.appendChild(style);
+    // Static markers — no animations
 }
 
 // Add a new live event to the map with animated marker
